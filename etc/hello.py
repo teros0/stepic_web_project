@@ -7,7 +7,7 @@ CONFIG = {
             '--daemon',
             '--workers=2',
             '--timeout=60',
-            '--log-file=/home/box/gunicorn.log',
+            '--log-file=/home/box/web/gunicorn.log',
             'hello:app',
     ),
 }
