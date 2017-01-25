@@ -7,13 +7,13 @@ class QuestionManager(models.Manager):
     def new(self):
         with connection.cursor() as cursor:
             cursor.execute("""SELECT * from qa_question q ORDER BY q.added_at DESC""")
-            result_list = cursor_fetchall()
+            result_list = cursor.fetchall()
         return result_list
 
     def popular(self):
         with connection.cursor() as cursor:
             cursor.execute("""SELECT * from qa_question q ORDER BY q.rating DESC""")
-            result_list = cursor_fetchall()
+            result_list = cursor.fetchall()
         return result_list
 
 class Question(models.Model):
@@ -29,6 +29,8 @@ class Question(models.Model):
         def __unicode__(self):
             return self.title
             
+        def get_absolute_url(self) :
+            return '/question/%d/' % self.pk
 
 
 class Answer(models.Model):
