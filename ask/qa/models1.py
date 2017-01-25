@@ -1,8 +1,21 @@
 from __future__ import unicode_literals
 
-from django.db import models
+from django.db import models, connection
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+
+class QuestionManager(models.Manager):
+    def new(self):
+        with connection.cursor() as cursor:
+            cursor.execute("""SELECT * from qa_question q ORDER BY q.added_at DESC""")
+            result_list = cursor.fetchall()
+        return result_list
+
+    def popular(self):
+        with connection.cursor() as cursor:
+            cursor.execute("""SELECT * from qa_question q ORDER BY q.rating DESC""")
+            result_list = cursor.fetchall()
+        return result_list
 
 
 class Question(models.Model):
