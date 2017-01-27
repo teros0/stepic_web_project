@@ -24,7 +24,7 @@ def post_list(request):
     posts = Question.objects.all().order_by('-added_at')
     paginator, page = paginate(request, posts)
     return render(request, 'post_list.html',
-                {'posts': posts,
+                {'posts': page.object_list,
                 'paginator': paginator,
                 'page': page,
     })
@@ -34,7 +34,7 @@ def popular(request):
     posts = Question.objects.all().order_by('-rating')
     paginator, page = paginate(request, posts)
     return render(request, 'post_list.html',
-                {'posts': posts,
+                {'posts': page.object_list,
                 'paginator': paginator,
                 'page': page,
     })
