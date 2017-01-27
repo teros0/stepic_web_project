@@ -21,7 +21,7 @@ def paginate(request, qs):
 
 @require_GET
 def post_list(request):
-    posts = Question.objects.all().order_by('-id')
+    posts = Question.objects.all().order_by('-added_at')
     paginator, page = paginate(request, posts)
     return render(request, 'post_list.html',
                 {'posts': posts,
