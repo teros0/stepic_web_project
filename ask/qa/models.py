@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models, connection
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 class QuestionManager(models.Manager):
     def new(self):
@@ -31,6 +32,9 @@ class Question(models.Model):
 
     def __unicode__(self):
         return self.title
+
+    def get_url(self):
+        return reverse('question_detail', kwargs={'pk': self.id})
 
 
 class Answer(models.Model):
