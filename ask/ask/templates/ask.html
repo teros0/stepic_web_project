@@ -1,25 +1,19 @@
 {% extends "base.html" %}
 {% block title %}
-    <h1>{{ question.super }}</h1>>
+    {{ block.super }} - задать вопрос
 {% endblock %}
 {% block content %}
-    <h2>{{ question.title }}</h2>
-    <div>{{ question.text }}</div>
-    <div>Ответы: </div>
-    {% for answer in question.answer_set.all %}
-        <div>- {{ answer.text }}</div>
-    {% endfor %}
     {% for e in form.non_field_errors %}
         <div>{{ e }}</div>
     {% endfor %}
-    <form method='post' action='/question/{{ question.id }}/'>
+    <form method='post' action='/ask/'>
         <fieldset>
         {% csrf_token %}
             {% for field in form %}
                 <label>{{ field.label }}</label>
                 <div>{{ field }}</div>
             {% endfor %}
-            <input type="submit" value="Ответить">
+            <input type="submit" value="Спросить">
         </fieldset>
     </form>
 {% endblock %}

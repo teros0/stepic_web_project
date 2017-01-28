@@ -1,6 +1,6 @@
 from django.conf.urls import url, include
 from django.contrib import admin
-from ask.views import post_list, popular
+from ask.views import post_list, popular, ask
 from qa.views import test, question
 
 urlpatterns = [
@@ -9,7 +9,7 @@ urlpatterns = [
     url(r'^login/', test),
     url(r'^signup/', test),
     url(r'^question/', include('qa.urls')),
-    url(r'^ask/', test),
+    url(r'^ask/', ask),
     url(r'^popular/', popular),
     url(r'^new/', test),
 ]

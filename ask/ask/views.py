@@ -1,8 +1,10 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.http import require_GET
 from qa.models import Question
+from qa.forms import AskForm, AnswerForm
+from django.core.urlresolvers import reverse
 
 def paginate(request, qs):
     try:
@@ -38,3 +40,17 @@ def popular(request):
                 'paginator': paginator,
                 'page': page,
     })
+
+def ask(request):
+    if request.method == 'POST':
+        form = AskForm(request.POST)
+        if form.is_valid():
+            form._user = request.user
+            form_s = form.save()
+            url = reverse('question_detail', args=[form_s.id])
+            return HttpResponseRedirect(url)
+    else:
+        form = AskForm()
+        return render(request, 'ask.html', {
+                'form': form,
+        })
