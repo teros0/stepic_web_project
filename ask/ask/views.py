@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.http import require_GET
 from qa.models import Question
-from qa.forms import AskForm, AnswerForm, SignupForm
+from qa.forms import AskForm, AnswerForm, SignupForm, LoginForm
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login
 
@@ -62,7 +62,7 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
+            password = form.rawpass
             user = authenticate(username=username, password=password)
             if user is not None:
                 if user.is_active:
@@ -71,6 +71,25 @@ def signup(request):
     else:
         form = SignupForm()
     return render(request, "signup.html", {
+        "form": form,
+        "user": request.user,
+        "session": request.session,
+        })
+
+def logine(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+            return HttpResponseRedirect('/')
+    else:
+        form = LoginForm()
+    return render(request, "login.html", {
         "form": form,
         "user": request.user,
         "session": request.session,

@@ -1,6 +1,7 @@
 from django import forms
 from qa.models import Question, Answer
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 from django.shortcuts import get_object_or_404
 
 class AskForm(forms.Form):
@@ -62,8 +63,11 @@ class SignupForm(forms.Form):
             raise forms.ValidationError(u'Enter username')
         try:
             User.objects.get(username=username)
+            print("Get")
             raise forms.ValidationError(u'User exists')
+            print("Get")
         except:
+            print("Except")
             pass
         return username
 
@@ -71,7 +75,8 @@ class SignupForm(forms.Form):
         password = self.cleaned_data.get('password')
         if not password:
             raise forms.ValidationError(u'Enter password')
-        return password
+        self.rawpass = password
+        return make_password(password)
 
     def save(self):
         user = User(**self.cleaned_data)
@@ -95,13 +100,12 @@ class LoginForm(forms.Form):
             raise forms.ValidationError(u'Enter password')
         return password
 
-     def clean(self):
+    def clean(self):
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
-            raise forms.ValidationError('Неверное имя пользователя или пароль1')
+            raise forms.ValidationError(u'Wrong name or password')
         if not user.check_password(password):
-raise forms.ValidationError('Неверное имя пользователя или пароль2')
-        
+            raise forms.ValidationError(u'Wrong name or password')
