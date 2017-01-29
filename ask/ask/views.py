@@ -3,8 +3,9 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.http import require_GET
 from qa.models import Question
-from qa.forms import AskForm, AnswerForm
+from qa.forms import AskForm, AnswerForm, SignupForm
 from django.core.urlresolvers import reverse
+from django.contrib.auth import authenticate, login
 
 def paginate(request, qs):
     try:
@@ -53,4 +54,24 @@ def ask(request):
         form = AskForm()
         return render(request, 'ask.html', {
                 'form': form,
+        })
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+            return HttpResponseRedirect('/')
+    else:
+        form = SignupForm()
+    return render(request, "signup.html", {
+        "form": form,
+        "user": request.user,
+        "session": request.session,
         })
