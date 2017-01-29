@@ -47,7 +47,7 @@ class AnswerForm(forms.Form):
 
     def save(self):
         self.cleaned_data['question'] = get_object_or_404(Question, pk=self.cleaned_data['question'])
-        self.cleaned_data['author_id'] = 1
+        self.cleaned_data['author_id'] = self._user.id
         answ = Answer(**self.cleaned_data)
         answ.save()
         return answ
