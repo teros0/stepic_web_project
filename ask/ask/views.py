@@ -80,8 +80,8 @@ def logine(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
+            username = form.cleaned_data[0]
+            password = form.cleaned_data[1]
             user = authenticate(username=username, password=password)
             if user is not None:
                 if user.is_active:
