@@ -23,7 +23,7 @@ class AskForm(forms.Form):
         return text
 
     def save(self):
-        self.cleaned_data['author_id'] = 1
+        self.cleaned_data['author_id'] = self._user.id
         quest = Question(**self.cleaned_data)
         quest.save()
         return quest
